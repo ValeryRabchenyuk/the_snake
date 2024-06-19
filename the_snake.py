@@ -40,17 +40,65 @@ clock = pygame.time.Clock()
 
 
 # Тут опишите все классы игры.
-...
+class GameObject:
+    def __init__(self) -> None:
+        self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
+        self.body_color = None
+
+    def draw(self):
+        pass
+  
+
+class Apple(GameObject):
+
+    def __init__(self, body_color=APPLE_COLOR) -> None:                                #проверить body_color=APPLE_COLOR  MOZNO UBRAT'
+        super().__init__()
+        self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))      #=self.randomize_position() VERNO iz VeBa                 #проверить с ГамеОбджект
+        self.body_color = body_color                      #APPLE_COLOR    BILO bez position arg 
+
+    def randomize_position(self) -> tuple[int, int]:
+        return (
+            randint(0, GRID_WIDTH) * GRID_SIZE,
+            randint(0, GRID_HEIGHT) * GRID_SIZE,
+        )
+
+    def draw(self):
+        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+
+class Snake(GameObject):
+  pass
+
+def handle_keys(game_object):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            raise SystemExit
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP and game_object.direction != DOWN:
+                game_object.next_direction = UP
+            elif event.key == pygame.K_DOWN and game_object.direction != UP:
+                game_object.next_direction = DOWN
+            elif event.key == pygame.K_LEFT and game_object.direction != RIGHT:
+                game_object.next_direction = LEFT
+            elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
+                game_object.next_direction = RIGHT
 
 
 def main():
     # Инициализация PyGame:
     pygame.init()
     # Тут нужно создать экземпляры классов.
-    ...
+    apple = Apple()
+    apple.draw()                         #PROVERIT'   PRO KAKOI-TO CICLE I NE DVIGAUSH APPLE
 
-    # while True:
-    #     clock.tick(SPEED)
+    while True:
+        clock.tick(SPEED)
+        handle_keys(apple)
+        apple.draw()
+        pygame.display.updates()
 
         # Тут опишите основную логику игры.
         # ...
