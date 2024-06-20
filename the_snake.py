@@ -41,20 +41,20 @@ clock = pygame.time.Clock()
 
 # Тут опишите все классы игры.
 class GameObject:
-    def __init__(self) -> None:
+    def __init__(self) -> None:                            #libo: (self. body_color=None)   i  togda   self.b_c= b_c
         self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
         self.body_color = None
 
     def draw(self):
         pass
-  
+
 
 class Apple(GameObject):
 
     def __init__(self, body_color=APPLE_COLOR) -> None:                                #проверить body_color=APPLE_COLOR  MOZNO UBRAT'
-        super().__init__()
-        self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))      #=self.randomize_position() VERNO iz VeBa                 #проверить с ГамеОбджект
-        self.body_color = body_color                      #APPLE_COLOR    BILO bez position arg 
+        super().__init__()               #super.__init__(body_color=APPLE_COLOR)
+        self.body_color = body_color                      #=APPLE_COLOR    BILO bez position arg 
+        self.position = # self.randomize_position()       <------   или просто вызов рандм позишн
 
     def randomize_position(self) -> tuple[int, int]:
         return (
@@ -106,7 +106,13 @@ def main():
 
         # Тут опишите основную логику игры.
         # ...
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                break
 
+        #pygame.display.updates()   To li zdec' To li vishe
+        
 
 if __name__ == '__main__':
     main()
