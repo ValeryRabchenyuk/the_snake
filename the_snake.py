@@ -69,7 +69,10 @@ class Apple(GameObject):
 
 
 class Snake(GameObject):
-  pass
+    def __init__(self, body_color=SNAKE_COLOR) -> None:
+        super().__init__()
+        self.body_color = body_color    
+
 
 def handle_keys(game_object):
     for event in pygame.event.get():
@@ -88,6 +91,7 @@ def handle_keys(game_object):
 
 
 def main():
+    """Главный цикл игры"""
     # Инициализация PyGame:
     pygame.init()
     # Тут нужно создать экземпляры классов.
