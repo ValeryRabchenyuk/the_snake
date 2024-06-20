@@ -58,7 +58,7 @@ class Apple(GameObject):
         self.randomize_position()       
 
     def randomize_position(self):
-        return (
+        self.position = (
             randint(0, GRID_WIDTH) * GRID_SIZE,
             randint(0, GRID_HEIGHT) * GRID_SIZE,
         )
@@ -74,34 +74,41 @@ class Snake(GameObject):
     def __init__(self, body_color=SNAKE_COLOR):
         """ 1 метод — инициализация """
         super().__init__()
-        self.leght = 1  # 1 атрибут — длинна
-        self.positions = self.position  # 2 атрибут — начало — центр экрана.
+        self.length = 1  # 1 атрибут — длинна
+        self.positions = [self.position]  # 2 атрибут — начало — центр экрана.
         self.direction = RIGHT  # 3 атрибут — направление движения
         self.next_direction = None  # 4 атрибут — след. направление
         self.body_color = body_color  # 5 атрибут — цвет
+        self.last = None  # 6 атрибут — цвет позиция последнего сегмента
 
     def update_direction(self):
-        """ 2 метод — обновление направления (из прекода) """
+        """ 2 метод — обновление направления (прекод) """
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
 
     def get_head_position(self):
         """ 3 метод — возвращает позицию головы """
-        return self.posirtion[0]
+        return self.position[0]
 
     def move(self):
         """ 4 метод — обновление позиции """
         self.update_direction()
-        head_position = self.get_head_position():
+        head_position = self.get_head_position()
         x, y = self.direction
         new_head = (
-
+            (head_position[0] + x * GRID_SIZE) % SCREEN_WIDTH
+            (head_position[1] + y * GRID_SIZE) % SCREEN_HEIGHT
         )
+        if new_head in self.positions[2:]:
+            self.reset()
+        else:
+            self.positions.insert(0, new_head)
+            if len(self.positions) > self.length:
+                self.last = self.positions.pop()
 
-
-    # Метод draw класса Snake
     def draw(self):
+        """ 5 метод — отрисовка змеи (прекод) """
         for position in self.positions[:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
@@ -117,21 +124,17 @@ class Snake(GameObject):
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
+    def reset(self):
+        """ 6 метод — сброс змеи """ 
+        self.leght = 1
+        self.positions = [self.position]
+        self.direction = RIGHT    #направление устанавливается случайным образом
+        self.next_direction = None
+        self.last = None 
+        screen.fill(BOARD_BACKGROUND_COLOR)
 
-        
-    def reset(self): 
-        pass#сбрасывает змейку в начальное состояние после столкновения с собой.   
-
-def main():
-    """Главный цикл игры"""
-    # Инициализация PyGame:
-    pygame.init()
-    # Тут нужно создать экземпляры классов.
-    apple = Apple()
-    apple.draw()                         #PROVERIT'   PRO KAKOI-TO CICLE I NE DVIGAUSH APPLE
-
-
-def handle_keys(game_object):                 # BILO (game_object)
+def handle_keys(game_object):
+    """ Обработка нажатия клавиш (прекод) """                 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -146,15 +149,27 @@ def handle_keys(game_object):                 # BILO (game_object)
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
 
+def main():
+    """Главный цикл игры"""
+    # Инициализация PyGame:
+    pygame.init()
+    # Экземпляры классов
+    snake = Snake()
+    apple = Apple()
+
     while True:
         clock.tick(SPEED)
-        handle_keys(Snake) #bilo apple
-        Apple.draw()
-        Snake.draw()
+
+        handle_keys(snake)
+        snake.move()
+
+        snake.draw()
+        apple.draw()    
+        if snake.get_head_position() == apple.position:
+            snake.length += 1
+        
         pygame.display.updates()
 
-        # Тут опишите основную логику игры.
-        # ...
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
