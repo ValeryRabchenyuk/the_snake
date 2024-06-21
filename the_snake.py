@@ -59,8 +59,8 @@ class Apple(GameObject):
     def __init__(self, body_color=APPLE_COLOR):
         """1 метод — инициализация"""
         super().__init__()
-        self.body_color = body_color
-        self.randomize_position()
+        self.body_color = body_color  # 1 атрибут — цвет
+        self.randomize_position()  # 2 атрибут — случайная позиция яблока
 
     def randomize_position(self):
         """2 метод — случайное положение яблока"""
