@@ -41,43 +41,46 @@ clock = pygame.time.Clock()
 
 # Тут опишите все классы игры.
 class GameObject:
-    """ Родительский класс """
+    """Родительский класс"""
+
     def __init__(self):
-        """ 1 метод — инициализация """
+        """1 метод — инициализация"""
         self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
         self.body_color = None
 
     def draw(self):
-        """ Абстрактный метод для переопределения  """
+        """Абстрактный метод для переопределения"""
         pass
 
 
 class Apple(GameObject):
-    """ Дочерний класс """
+    """Дочерний класс"""
+
     def __init__(self, body_color=APPLE_COLOR):
-        """ 1 метод — инициализация """
+        """1 метод — инициализация"""
         super().__init__()
         self.body_color = body_color
         self.randomize_position()
 
     def randomize_position(self):
-        """ 2 метод — случайное положение яблока """
+        """2 метод — случайное положение яблока"""
         self.position = (
             randint(0, GRID_WIDTH) * GRID_SIZE,
             randint(0, GRID_HEIGHT) * GRID_SIZE,
         )
 
     def draw(self):
-        """ 3 метод — отрисовка яблока (прекод) """
+        """3 метод — отрисовка яблока (прекод)"""
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 class Snake(GameObject):
-    """ Дочерний класс """
+    """Дочерний класс"""
+
     def __init__(self, body_color=SNAKE_COLOR):
-        """ 1 метод — инициализация """
+        """1 метод — инициализация"""
         super().__init__()
         self.length = 1  # 1 атрибут — длинна
         self.positions = [self.position]  # 2 атрибут — начало — центр экрана
@@ -87,17 +90,17 @@ class Snake(GameObject):
         self.last = None  # 6 атрибут — цвет позиция последнего сегмента
 
     def update_direction(self):
-        """ 2 метод — обновление направления (прекод) """
+        """2 метод — обновление направления (прекод)"""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
 
     def get_head_position(self):
-        """ 3 метод — возвращает позицию головы """
+        """3 метод — возвращает позицию головы"""
         return self.positions[0]
 
     def move(self):
-        """ 4 метод — обновление позиции """
+        """4 метод — обновление позиции"""
         self.update_direction()
         head_position = self.get_head_position()
         x, y = self.direction
@@ -114,7 +117,7 @@ class Snake(GameObject):
                 self.last = self.positions.pop()
 
     def draw(self):
-        """ 5 метод — отрисовка змеи (прекод) """
+        """5 метод — отрисовка змеи (прекод)"""
         for position in self.positions[:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
             pygame.draw.rect(screen, self.body_color, rect)
@@ -131,7 +134,7 @@ class Snake(GameObject):
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
     def reset(self):
-        """ 6 метод — сброс змеи """
+        """6 метод — сброс змеи"""
         self.leght = 1
         self.positions = [self.position]
         self.direction = RIGHT
@@ -141,7 +144,7 @@ class Snake(GameObject):
 
 
 def handle_keys(game_object):
-    """ Обработка нажатия клавиш (прекод) """
+    """Обработка нажатия клавиш (прекод)"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -158,7 +161,7 @@ def handle_keys(game_object):
 
 
 def main():
-    """ Главный цикл игры """
+    """Главный цикл игры"""
     # Инициализация PyGame:
     pygame.init()
     # Экземпляры классов
