@@ -122,7 +122,7 @@ class Snake(GameObject):
                 self.last = self.positions.pop()
 
     def draw(self):
-        """Отрисовка змеи (прекод)""" 
+        """Отрисовка змеи (прекод)"""
         for position in self.positions[:-1]:
             Snake.draw_rect(position, SNAKE_COLOR)
 
