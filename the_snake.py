@@ -2,44 +2,45 @@ from random import randint
 
 import pygame
 
-
+# Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
+# Направления движения:
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
-
 BORDER_COLOR = (93, 216, 228)
-
 APPLE_COLOR = (255, 0, 0)
-
 SNAKE_COLOR = (0, 255, 0)
 
-SPEED = 20
+# Скорость движения змейки:
+SPEED = 15
 
+# Настройка игрового окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
+# Заголовок окна игрового поля:
 pygame.display.set_caption('Змейка')
 
+# Настройка времени:
 clock = pygame.time.Clock()
 
 
 class GameObject:
-    """Родительский класс"""
+    """Абстрактный класс игрового объекта"""
 
     def __init__(self):
-        """Инициализация"""
         self.position = ((SCREEN_WIDTH // 2), (SCREEN_HEIGHT // 2))
         self.body_color = None
 
     def draw(self):
-        """Абстрактный метод для переопределения"""
+        """Абстрактный метод для отрисовки игровых объектов."""
         raise NotImplementedError
 
     @staticmethod
@@ -51,10 +52,9 @@ class GameObject:
 
 
 class Apple(GameObject):
-    """Дочерний класс"""
+    """Отрисовка яблока"""
 
     def __init__(self, body_color=APPLE_COLOR):
-        """Инициализация"""
         super().__init__()
         self.body_color = body_color
         self.randomize_position([])
@@ -73,15 +73,13 @@ class Apple(GameObject):
         self.position = position
 
     def draw(self):
-        """Отрисовка яблока (прекод)"""
         Apple.draw_rect(self.position, APPLE_COLOR)
 
 
 class Snake(GameObject):
-    """Дочерний класс"""
+    """Отрисовка змейки"""
 
     def __init__(self, body_color=SNAKE_COLOR):
-        """Инициализация"""
         super().__init__()
         self.length = 1
         self.positions = [self.position]
@@ -91,17 +89,15 @@ class Snake(GameObject):
         self.last = None
 
     def update_direction(self):
-        """Обновление направления (прекод)"""
+        """Обновление направления"""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
 
     def get_head_position(self):
-        """Возвращает позицию головы"""
         return self.positions[0]
 
     def get_positions(self):
-        """Возвращает координаты змеи"""
         return self.positions
 
     def move(self):
@@ -122,7 +118,6 @@ class Snake(GameObject):
                 self.last = self.positions.pop()
 
     def draw(self):
-        """Отрисовка змеи (прекод)"""
         for position in self.positions[:-1]:
             Snake.draw_rect(position, SNAKE_COLOR)
 
@@ -135,7 +130,7 @@ class Snake(GameObject):
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
     def reset(self):
-        """Сброс змеи"""
+        """Сброс змейки"""
         self.leght = 1
         self.positions = [self.position]
         self.direction = RIGHT
@@ -145,7 +140,7 @@ class Snake(GameObject):
 
 
 def handle_keys(game_object):
-    """Обработка нажатия клавиш (прекод)"""
+    """Обработка нажатия клавиш"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
